@@ -188,6 +188,85 @@ section h3 {
   padding-top: 10px;
   display: flex;
   justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Social Share Buttons */
+.share-container {
+  position: relative;
+  display: inline-block;
+}
+
+.share-button {
+  background: linear-gradient(145deg, var(--primary-light), var(--primary));
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(26, 35, 126, 0.2);
+}
+
+.share-button:hover {
+  background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(26, 35, 126, 0.3);
+}
+
+.share-icon {
+  font-size: 1rem;
+}
+
+.share-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  min-width: 140px;
+  margin-bottom: 5px;
+  overflow: hidden;
+}
+
+.share-dropdown.hidden {
+  display: none;
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.share-option:hover {
+  background-color: var(--background);
+}
+
+.share-option:not(:last-child) {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.share-option span {
+  font-size: 1rem;
 }
 
 /* Activity Tag */
