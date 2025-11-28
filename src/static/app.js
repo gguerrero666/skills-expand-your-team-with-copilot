@@ -653,14 +653,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           shareText
         )}&url=${encodeURIComponent(shareUrl)}`;
-        window.open(twitterUrl, "_blank", "width=550,height=420");
+        const twitterWindow = window.open(twitterUrl, "_blank", "noopener,noreferrer,width=550,height=420");
+        if (!twitterWindow || twitterWindow.closed) {
+          showMessage("Popup blocked. Please allow popups for sharing.", "error");
+        }
         break;
 
       case "facebook":
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
           shareUrl
         )}&quote=${encodeURIComponent(shareText)}`;
-        window.open(facebookUrl, "_blank", "width=550,height=420");
+        const facebookWindow = window.open(facebookUrl, "_blank", "noopener,noreferrer,width=550,height=420");
+        if (!facebookWindow || facebookWindow.closed) {
+          showMessage("Popup blocked. Please allow popups for sharing.", "error");
+        }
         break;
 
       case "email":
@@ -672,16 +678,42 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "copy":
-        navigator.clipboard
-          .writeText(shareUrl)
-          .then(() => {
-            showMessage("Link copied to clipboard!", "success");
-          })
-          .catch(() => {
-            showMessage("Failed to copy link", "error");
-          });
+        // Check if clipboard API is available
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(shareUrl)
+            .then(() => {
+              showMessage("Link copied to clipboard!", "success");
+            })
+            .catch(() => {
+              // Fallback for clipboard API failure
+              fallbackCopyToClipboard(shareUrl);
+            });
+        } else {
+          // Fallback for browsers without clipboard API
+          fallbackCopyToClipboard(shareUrl);
+        }
         break;
     }
+  }
+
+  // Fallback method for copying to clipboard
+  function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      showMessage("Link copied to clipboard!", "success");
+    } catch (err) {
+      showMessage("Failed to copy link. Please copy manually: " + text, "error");
+    }
+    document.body.removeChild(textArea);
   }
 
   // Close share dropdowns when clicking outside
